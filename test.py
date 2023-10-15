@@ -13,7 +13,7 @@ class MyTopology(Topo):
     switch2 = self.addSwitch('Switch2') ## Adds a Switch
     switch3 = self.addSwitch('Switch3') ## Adds a Switch
     switch4 = self.addSwitch('Switch4') ## Adds a Switch
-    siri = self.addHost('siri', ip = '10.0.0.5/24') ## Adds a Host
+    siri = self.addHost('Siri', ip = '10.0.0.5/24') ## Adds a Host
     alexa = self.addHost('Alexa', ip = '10.0.0.5/24' ) ## Adds a Host
     desktop = self.addHost('Desktop', ip ='10.0.0.1/24' ) ## Adds a Host
     smartTV = self.addHost('SmartTV', ip ='10.0.0.3/24' ) ## Adds a Host
