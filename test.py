@@ -2,6 +2,7 @@
 from mininet.topo import Topo
 from mininet.net import Mininet
 from mininet.cli import CLI
+from mininet.link import TCLink
 class MyTopology(Topo):
   """
   A basic topology
@@ -19,15 +20,15 @@ class MyTopology(Topo):
     smartTV = self.addHost('SmartTV', ip ='10.0.0.3/24' ) ## Adds a Host
     fridge = self.addHost('Fridge', ip ='10.0.0.4/24' ) ## Adds a Host
     server = self.addHost('Server', ip = '10.0.0.2/24') ## Adds a Host
-    self.addLink(siri, switch3) ## Add a link
-    self.addLink(alexa, switch3) ## Add a link
-    self.addLink(switch2, switch3) ## Add a link
-    self.addLink(desktop, switch2) ## Add a link
-    self.addLink(switch2, switch4) ## Add a link
-    self.addLink(server, switch4) ## Add a link
-    self.addLink(switch1, switch2) ## Add a link
-    self.addLink(smartTV, switch1) ## Add a link
-    self.addLink(fridge, switch1) ## Add a link
+    self.addLink(siri, switch3, delay ="30ms") ## Add a link
+    self.addLink(alexa, switch3, delay ="30ms") ## Add a link
+    self.addLink(switch2, switch3, delay ="30ms") ## Add a link
+    self.addLink(desktop, switch2, delay ="30ms") ## Add a link
+    self.addLink(switch2, switch4, delay ="30ms") ## Add a link
+    self.addLink(server, switch4, delay ="30ms") ## Add a link
+    self.addLink(switch1, switch2, delay ="30ms") ## Add a link
+    self.addLink(smartTV, switch1, delay ="30ms") ## Add a link
+    self.addLink(fridge, switch1, delay ="30ms") ## Add a link
 
 if __name__ == '__main__':
   """
@@ -35,7 +36,7 @@ if __name__ == '__main__':
   what it will do
   """
   topo = MyTopology() ## Creates the topology
-  net = Mininet( topo=topo ) ## Loads the topology
+  net = Mininet( topo=topo, link = TCLink) ## Loads the topology
   net.start() ## Starts Mininet
   # Commands here will run on the simulated topology
   CLI(net)
