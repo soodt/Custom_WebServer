@@ -17,18 +17,18 @@ class MyTopology(Topo):
     siri = self.addHost('Siri', ip = '10.0.0.5/24') ## Adds a Host
     alexa = self.addHost('Alexa', ip = '10.0.0.5/24' ) ## Adds a Host
     desktop = self.addHost('Desktop', ip ='10.0.0.1/24' ) ## Adds a Host
-    smartTV = self.addHost('SmartTV', ip ='10.0.0.3/24' ) ## Adds a Host
+    smartTV = self.addHost('smartTV', ip ='10.0.0.3/24' ) ## Adds a Host
     fridge = self.addHost('Fridge', ip ='10.0.0.4/24' ) ## Adds a Host
     server = self.addHost('Server', ip = '10.0.0.2/24') ## Adds a Host
     self.addLink(siri, switch3, delay ="30ms") ## Add a link
     self.addLink(alexa, switch3, delay ="30ms") ## Add a link
     self.addLink(switch2, switch3, delay ="30ms") ## Add a link
     self.addLink(desktop, switch2, delay ="30ms") ## Add a link
-    self.addLink(switch2, switch4, delay ="30ms") ## Add a link
+    self.addLink(switch2, switch4, delay ="50ms") ## Add a link
     self.addLink(server, switch4, delay ="30ms") ## Add a link
     self.addLink(switch1, switch2, delay ="30ms") ## Add a link
     self.addLink(smartTV, switch1, delay ="30ms") ## Add a link
-    self.addLink(fridge, switch1, delay ="30ms") ## Add a link
+    self.addLink(fridge, switch1, delay ="50ms") ## Add a link
 
 if __name__ == '__main__':
   """
