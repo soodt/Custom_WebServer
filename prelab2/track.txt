@@ -1,1 +1,4 @@
-hi
+<img src="http://gaia.cs.umass.edu/pearson.png" WIDTH="140" HEIGHT="82" > 
+
+img src="http://kurose.cslash.net/8E_cover_small.jpg"
+..     width="168" height="220">
