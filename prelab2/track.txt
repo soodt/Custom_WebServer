@@ -2,3 +2,159 @@
 
 img src="http://kurose.cslash.net/8E_cover_small.jpg"
 ..     width="168" height="220">
+
+
+GET /wireshark-labs/HTTP-wireshark-file4.html HTTP/1.1
+
+Host: gaia.cs.umass.edu
+
+Connection: keep-alive
+
+User-Agent: Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/63.0.3239.84 Chrome/63.0.3239.84 Safari/537.36
+
+Upgrade-Insecure-Requests: 1
+
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8
+
+Accept-Encoding: gzip, deflate
+
+Accept-Language: en-US,en;q=0.9
+
+
+
+HTTP/1.1 200 OK
+
+Date: Sat, 21 Oct 2023 02:18:25 GMT
+
+Server: Apache/2.4.6 (CentOS) OpenSSL/1.0.2k-fips PHP/7.4.33 mod_perl/2.0.11 Perl/v5.16.3
+
+Last-Modified: Fri, 20 Oct 2023 05:59:02 GMT
+
+ETag: "3ae-6081f91bbcf0f"
+
+Accept-Ranges: bytes
+
+Content-Length: 942
+
+Keep-Alive: timeout=5, max=100
+
+Connection: Keep-Alive
+
+Content-Type: text/html; charset=UTF-8
+
+
+
+<html>
+<head>
+<title>Lab2-4 file: Embedded URLs</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</head>
+
+<body bgcolor="#FFFFFF" text="#000000">
+
+<p>
+<img src="http://gaia.cs.umass.edu/pearson.png" WIDTH="140" HEIGHT="82" > </p>
+<p>This little HTML file is being served by gaia.cs.umass.edu. 
+It contains two embedded images. The image above, also served from the 
+gaia.cs.umass.edu web site, is the logo of our publisher, Pearson. 
+The image of our 8th edition book cover below is stored at, and served from,
+  a  WWW server kurose.cslash.net in France:</p>
+<p align="left"><img src="http://kurose.cslash.net/8E_cover_small.jpg"
+..     width="168" height="220"></p>
+And while we have your attention, you might want to take time to check out the
+..     available open resources for this book at
+..     <a href="http://gaia.cs.umass.edu/kurose_ross"> http://gaia.cs.umass.edu/kurose_ross</a>.
+
+</body>
+</html>
+GET /pearson.png HTTP/1.1
+
+Host: gaia.cs.umass.edu
+
+Connection: keep-alive
+
+User-Agent: Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/63.0.3239.84 Chrome/63.0.3239.84 Safari/537.36
+
+Accept: image/webp,image/apng,image/*,*/*;q=0.8
+
+Referer: http://gaia.cs.umass.edu/wireshark-labs/HTTP-wireshark-file4.html
+
+Accept-Encoding: gzip, deflate
+
+Accept-Language: en-US,en;q=0.9
+
+
+
+HTTP/1.1 200 OK
+
+Date: Sat, 21 Oct 2023 02:18:25 GMT
+
+Server: Apache/2.4.6 (CentOS) OpenSSL/1.0.2k-fips PHP/7.4.33 mod_perl/2.0.11 Perl/v5.16.3
+
+Last-Modified: Sat, 06 Aug 2016 10:08:14 GMT
+
+ETag: "cc3-539645c7f1ee7"
+
+Accept-Ranges: bytes
+
+Content-Length: 3267
+
+Keep-Alive: timeout=5, max=99
+
+Connection: Keep-Alive
+
+Content-Type: image/png
+
+
+
+.PNG
+
+.
+...
+IHDR..............
+......PLTE......<95.|..w.3/+.y.!...s.7400-(*& ...-)$.r................SQNdb`'#.DB>...#..............}{ynlj...[YV.........~|z..................t........JHDB..X..............jhf3..g..U.....'...................IDATx...y..<....S....}...Z.m[...z.@H............0..d2.pK%....p8.....p8.....p8.....p8.....b..]....]........*I.,..........Mgb..J.X..e...u.A..I...........e........._y..c...d.S..M.f..7.A...s...?..z.v.....m=5..(.......oy..C........H<...3..............w...L.{...^....S.I./..M....VV......y.~............e.&T..6?.O.:.JT?_.f.v._
+.g....H1......-PL.\...f....\.6....Z........|..3v....g:...#..........<R........~..Y........lu .x.?..X"Q.y(.%>(tDQ.k...0......'.r=)..o..-Q*....~.V...!^T...[JS.F.....mt.G:....CzwK....k.....5.........9.......G..T1.j....]|...(.Q..Z......z......l.....S..t.B..P..[..j!...%~.z_......ioC.....~..?..L.(.Q......7nXa...hq_.K?n.|.O.....7..\..6..ajs$..;.}<f.O.}.z2K
+E..Z.>6=p........!E
+./V=V.F./d.o2..D...^.w........Em.......>=r.w..~3..yO*.f.....:*......(b.....|6.....:J=.......j!o..dE~.l....kQI.IW
+j>..#..#..z......z/.&#..<..u.....]*......4.......l.m.@.hK{...h..(I..o*..eV}1.^.9K}..__S.s..h..-?......y....N{.V?R.f..[.Z...lq.IM.i...e..f............I.x
+....e...t.......a....els.u..]
+.8...Z......tV..\.R..1......\.'7......*.....Y.K...Y..t
+....O..z?..b.......|..).....W.Y_..}IMz2.._.....Y}..:.].C2.=........>.@.S.I0.m2._...i+ZX......v5.....]|O...b6.b|....vVZ.[-..:{d.>....]....c?{...|`!..D..z...... .i...b/..#].x0.....G...@........_O....(........,....} ...G..[..#:....._.]X.c.e.w3r.."*.tv..v.(.....b....@.%....4?...}...<..J..E.G..l.7...2.8....p8.....=g....z
+.."n..j.)o...ugT..........wLe.....1..+#.._W..4.9ZtNz.T_%.&&8.T..qI....RO.G.Q^...}..!..^//..I......8/..I..>.}.....3....}/./.~..6T..s...$._.../.W.........fs1...V;Tq8.%.U...!.~.n.........9...I....
+... .vx.`.'...jX..........n..U.]G..B......\.Lo..f.....
+.....i.n...R..,.a8#.MN3...a.c
+|....m.....>..bV.y..O...}..2.G^...v... ......5..
+.O..........
+..Ui.A07..F..}....=0t..W..F.[*U=.Q\..2.'......|.:t....9...^M..._......V....j.0...~.4....Q?4......s...C.4p<0.......H...'...
+.50.#.....c.?.`.hBx....U..:..J...B....<.....H...\..jk.b.V5]3.U....I.3$...p...H....p..Q5.\c.au.e7.^....../..z.Q.....[......#V.....
+0r........
+.r.u..4r......p,.<..z.:....yJ.s.......t.p.pd..
+Yf........:..:......-..x..Bs.T.T.....pz......N.m.E_s..l...i..H.-..p..=.u..]..`.)T..2.D..+.........`.....E.....`flA.;..r.Z..!~L...f.M...e.a...=2Np.'N..8....9<f.Gc.1...}.........B..9.... ........@M...~.C..A..p.M2.`..m$.b.....o..W...I&"J.B+F;....j.........^..xv..`.\\c.U=.....;Hx..o.Z......R..0..
+...H..wQ.}^.Im<a.9.O......zp......~.._7......Q.;.{......N....^.^qt-...[......oP.s..w.xj9.,=...z......r.......V).[gW.]...q....8A...pg.Q._).zb.{.......c.V.m..C..#.E.*..."f...zo.~..;OH.b...^.R.......D.,..$.......l....Q...XX.L.r(.....=.JF..Z{..6J.EV...Z.w~.[
+.R.....s*t[j.........5
+...........{.M.N...2...8.^..........I........R......[..>GH..>..6xk....Q..v.zA'J.....V...>.J...q6.....|.....w..M.c?\.......E..3..KVOM....r{.S..t.(D.3.'.3(..Nb...;pYv..pl.>N.
+...Lc<..T.Q.k..Dv..8P...!.9YyT.<.47...3....5DI..d....oi.}.1C...J.c..\.ll+...H.h.F..4.+h.........c....m.F..S.....0_TW].if].=_......~...|d.m;.&..o....:]s.....5....vk`.c..RwXz.y.....:.+..=...u}..Z.......tm<..b......'....V9.....p8.....p8.....p8.....p8.B.....h........IEND.B`.GET /favicon.ico HTTP/1.1
+
+Host: gaia.cs.umass.edu
+
+Connection: keep-alive
+
+User-Agent: Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/63.0.3239.84 Chrome/63.0.3239.84 Safari/537.36
+
+Accept: image/webp,image/apng,image/*,*/*;q=0.8
+
+Referer: http://gaia.cs.umass.edu/wireshark-labs/HTTP-wireshark-file4.html
+
+Accept-Encoding: gzip, deflate
+
+Accept-Language: en-US,en;q=0.9
+
+
+
+HTTP/1.1 404 Not Found
+
+Date: Sat, 21 Oct 2023 02:18:27 GMT
+
+Server: Apache/2.4.6 (CentOS) OpenSSL/1.0.2k-fips PHP/7.4.33 mod_perl/2.0.11 Perl/v5.16.3
+
+Content-Length: 209
