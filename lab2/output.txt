@@ -42,3 +42,31 @@ d343ohixkzst9h.cloudfront.net. 1808 IN	NS	ns-978.awsdns-58.net.
 ;; WHEN: Sun Oct 29 20:57:05 PDT 2023
 ;; MSG SIZE  rcvd: 218
 
+
+
+mininet@mininet-vm:~$ dig NS tcd.ie
+
+; <<>> DiG 9.9.5-3ubuntu0.16-Ubuntu <<>> NS tcd.ie
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 16927
+;; flags: qr rd ra; QUERY: 1, ANSWER: 4, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 1220
+;; QUESTION SECTION:
+;tcd.ie.				IN	NS
+
+;; ANSWER SECTION:
+tcd.ie.			3600	IN	NS	auth-ns1.tcd.ie.
+tcd.ie.			3600	IN	NS	auth-ns2.ucd.ie.
+tcd.ie.			3600	IN	NS	auth-ns2.tcd.ie.
+tcd.ie.			3600	IN	NS	auth-ns3.tcd.ie.
+
+;; Query time: 163 msec
+;; SERVER: 128.114.142.6#53(128.114.142.6)
+;; WHEN: Sun Oct 29 21:01:25 PDT 2023
+;; MSG SIZE  rcvd: 131
+
+mininet@mininet-vm:~$ 
+
