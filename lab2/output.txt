@@ -1,0 +1,19 @@
+; <<>> DiG 9.9.5-3ubuntu0.16-Ubuntu <<>> MX stanford.edu
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 31803
+;; flags: qr rd ra ad; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 1220
+;; QUESTION SECTION:
+;stanford.edu.			IN	MX
+
+;; ANSWER SECTION:
+stanford.edu.		1800	IN	MX	10 mxa-00000d07.gslb.pphosted.com.
+stanford.edu.		1800	IN	MX	10 mxb-00000d07.gslb.pphosted.com.
+
+;; Query time: 5 msec
+;; SERVER: 128.114.142.6#53(128.114.142.6)
+;; WHEN: Sun Oct 29 19:54:00 PDT 2023
+;; MSG SIZE  rcvd: 116
