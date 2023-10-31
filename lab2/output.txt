@@ -73,3 +73,7 @@ mininet@mininet-vm:~$
 
 16:38:37.460734000-16:38:35.651756000 
 
+
+(echo -ne "GET /10MB.zip HTTP/1.1\r\nHost: ipv4.download.thinkbroadband.com\r\n\r\n"; sleep 1) | nc ipv4.download.thinkbroadband.com 80 > downloaded_file.zip
+
+
