@@ -70,3 +70,6 @@ tcd.ie.			3600	IN	NS	auth-ns3.tcd.ie.
 
 mininet@mininet-vm:~$ 
 
+
+16:38:37.460734000-16:38:35.651756000 
+
