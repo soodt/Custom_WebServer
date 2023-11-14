@@ -73,6 +73,24 @@ class Firewall (object):
           return True
         else:
           return False
+    
+    def is_Guest(ip):
+      if (ip=='200.20.2.11'):
+        return True
+      else:
+        return False
+
+    def is_webServer(ip):
+      if (ip=='200.20.2.2'):
+        return True
+      else:
+        return False
+
+    def is_Printer(ip):
+      if (ip=='200.20.2.10'):
+        return True
+      else:
+        return False
 
     if packet.find('icmp') and is_DNSserver(dest_ip):
       drop_packet(self,packet,packet_in)
@@ -90,6 +108,14 @@ class Firewall (object):
       accept_packet(self,packet,packet_in)
     elif packet.find('tcp') and is_Server2(src_ip) and is_Laptop(dest_ip):
       accept_packet(self,packet,packet_in)
+    elif packet.find('tcp') and is_Guest(src_ip) and is_webServer(dest_ip):
+       accept_packet(self,packet,packet_in)
+    elif packet.find('tcp') and is_Guest(dest_ip) and is_webServer(src_ip):
+       accept_packet(self,packet,packet_in)
+    elif packet.find('tcp') and is_Printer(src_ip) and is_ITworkstation(dest_ip):
+       accept_packet(self,packet,packet_in)
+    elif packet.find('tcp') and is_Printer(dest_ip) and is_ITworkstation(src_ip):
+       accept_packet(self,packet,packet_in)
     elif packet.find('udp') and (is_ITworkstation(src_ip) or is_Laptop(src_ip)) and is_DNSserver(dest_ip):
       accept_packet(self,packet,packet_in)
     elif packet.find('udp') and (is_ITworkstation(dest_ip) or is_Laptop(dest_ip)) and is_DNSserver(src_ip):
