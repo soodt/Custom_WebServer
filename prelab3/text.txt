@@ -74,7 +74,9 @@ class Firewall (object):
         else:
           return False
 
-    if packet.find('arp') is not None:
+    if packet.find('icmp') and is_DNSserver(dest_ip):
+      drop_packet(self,packet,packet_in)
+    elif packet.find('arp') is not None:
       accept_packet(self,packet,packet_in)
     elif packet.find('icmp') is not None:
       accept_packet(self,packet,packet_in)
@@ -90,7 +92,7 @@ class Firewall (object):
       accept_packet(self,packet,packet_in)
     elif packet.find('udp') and (is_ITworkstation(src_ip) or is_Laptop(src_ip)) and is_DNSserver(dest_ip):
       accept_packet(self,packet,packet_in)
-    elif packet.find('udp') and (is_ITworkstation(dest_ip) or is_Laptop(dest_ip)) and self.is_DNSserver(src_ip):
+    elif packet.find('udp') and (is_ITworkstation(dest_ip) or is_Laptop(dest_ip)) and is_DNSserver(src_ip):
       accept_packet(self,packet,packet_in)
     else :
       drop_packet(self,packet,packet_in)
