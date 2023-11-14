@@ -1,0 +1,63 @@
+#!/usr/bin/python
+from mininet.topo import Topo
+from mininet.net import Mininet
+from mininet.cli import CLI
+from mininet.node import RemoteController
+
+class MyTopology(Topo):
+  def __init__(self):
+    Topo.__init__(self)
+   
+    #Switches and links
+    coreswitch =  self.addSwitch('s0')
+    switch1 = self.addSwitch('s1')
+    switch2 = self.addSwitch('s2')
+    switch3 = self.addSwitch('s3')
+    switch4 = self.addSwitch('s4')
+    self.addLink(switch1,coreswitch)
+    self.addLink(switch2,coreswitch)
+    self.addLink(switch3,coreswitch)
+    self.addLink(switch4,coreswitch)
+
+
+    #Sales Department with links
+    laptop1 = self.addHost('Laptop1', ip='200.20.2.8/24')
+    printer = self.addHost('Printer', ip='200.20.2.10/24')
+    laptop2 = self.addHost('Laptop2', ip='200.20.2.9/24')
+    self.addLink(laptop1,switch4)
+    self.addLink(printer,switch4)
+    self.addLink(laptop2,switch4)
+
+    #OT Department with links
+    workstation1 = self.addHost('ws1', ip='200.20.2.4/24')
+    workstation2 = self.addHost('ws2', ip='200.20.2.5/24')
+    self.addLink(workstation1,switch1)
+    self.addLink(workstation2,switch1)
+   
+    #IT Department with links
+    workstation3 = self.addHost('ws3', ip='200.20.2.7/24')
+    workstation4 = self.addHost('ws4', ip='200.20.2.6/24')
+    guest = self.addHost('Guest', ip='200.20.2.11/24')
+    self.addLink(workstation3,switch2)
+    self.addLink(workstation4,switch2)
+    self.addLink(guest,switch2)
+   
+    #Data Center with links
+    Server2 = self.addHost('Serv2', ip='200.20.2.1/24')
+    WebServer = self.addHost('ServWeb', ip='200.20.2.2/24')
+    DNSServer = self.addHost('ServDNS', ip='200.20.2.3/24')
+    self.addLink(Server2,switch3)
+    self.addLink(WebServer,switch3)
+    self.addLink(DNSServer,switch3)
+
+   
+if __name__ == '__main__':
+  #This part of the script is run when the script is executed
+  topo = MyTopology() #Creates a topology
+  net = Mininet(topo = topo, controller = RemoteController) #Loads the topology
+ 
+  net.start() #Starts mininet
+ 
+  CLI(net) #Opens a command line to run commands on the simulated topology
+
+  net.stop() #Stops mininet
