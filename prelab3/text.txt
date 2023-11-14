@@ -26,29 +26,30 @@ class Firewall (object):
 
   def do_firewall (self, packet, packet_in):
     # The code in here will be executed for every packet.
+    print "Example Code."
     src = packet.find('ipv4')
-    src_ip = src.src_ip
+    src_ip = src.src_ip if src else None
     dest = packet.find('ipv4')
-    dest_ip = dest.dest_ip
+    dest_ip = dest.dest_ip if dest else None
 
     if packet.find('arp') is not None:
-      self.accept_packet(self,packet,packet_in)
+      accept_packet(self,packet,packet_in)
     elif packet.find('icmp') is not None:
-      self.accept_packet(self,packet,packet_in)
+      accept_packet(self,packet,packet_in)
     elif packet.find('tcp') and is_workstation(src_ip) and is_workstation(dest_ip):
-      self.accept_packet(self,packet,packet_in)
+      accept_packet(self,packet,packet_in)
     elif packet.find('tcp') and is_ITworkstation(src_ip) and is_Laptop(dest_ip):
-      self.accept_packet(self,packet,packet_in)
+      accept_packet(self,packet,packet_in)
     elif packet.find('tcp') and is_Laptop(src_ip) and is_ITworkstation(dest_ip):
-      self.accept_packet(self,packet,packet_in)
+      accept_packet(self,packet,packet_in)
     elif packet.find('tcp') and is_Laptop(src_ip) and is_Server2(dest_ip):
-      self.accept_packet(self,packet,packet_in)
+      accept_packet(self,packet,packet_in)
     elif packet.find('tcp') and is_Server2(src_ip) and is_Laptop(dest_ip):
-      self.accept_packet(self,packet,packet_in)
+      accept_packet(self,packet,packet_in)
     elif packet.find('udp') and (is_ITworkstation(src_ip) or is_Laptop(src_ip)) and is_DNSserver(dest_ip):
-      self.accept_packet(self,packet,packet_in)
+      accept_packet(self,packet,packet_in)
     elif packet.find('udp') and (is_ITworkstation(dest_ip) or is_Laptop(dest_ip)) and is_DNSserver(src_ip):
-      self.accept_packet(self,packet,packet_in)
+      accept_packet(self,packet,packet_in)
     else :
       drop_packet(self,packet,packet_in)
 
