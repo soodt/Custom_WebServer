@@ -27,74 +27,73 @@ class Firewall (object):
   def do_firewall (self, packet, packet_in):
     # The code in here will be executed for every packet.
     src = packet.find('ipv4')
-    src_ip = src.src_ip if src else None
+    src_ip = src.srcip if src else None
     dest = packet.find('ipv4')
-    dest_ip = dest.dest_ip if dest else None
+    dest_ip = dest.dstip if dest else None
 
-    if packet.find('arp') is not None:
-      self.accept_packet(self,packet,packet_in)
-    elif packet.find('icmp') is not None:
-      self.accept_packet(self,packet,packet_in)
-    elif packet.find('tcp') and self.is_workstation(src_ip) and self.is_workstation(dest_ip):
-      self.accept_packet(self,packet,packet_in)
-    elif packet.find('tcp') and self.is_ITworkstation(src_ip) and self.is_Laptop(dest_ip):
-      self.accept_packet(self,packet,packet_in)
-    elif packet.find('tcp') and self.is_Laptop(src_ip) and self.is_ITworkstation(dest_ip):
-      self.accept_packet(self,packet,packet_in)
-    elif packet.find('tcp') and self.is_Laptop(src_ip) and self.is_Server2(dest_ip):
-      self.accept_packet(self,packet,packet_in)
-    elif packet.find('tcp') and self.is_Server2(src_ip) and self.is_Laptop(dest_ip):
-      self.accept_packet(self,packet,packet_in)
-    elif packet.find('udp') and (self.is_ITworkstation(src_ip) or self.is_Laptop(src_ip)) and self.is_DNSserver(dest_ip):
-      self.accept_packet(self,packet,packet_in)
-    elif packet.find('udp') and (self.is_ITworkstation(dest_ip) or self.is_Laptop(dest_ip)) and self.is_DNSserver(src_ip):
-      self.accept_packet(self,packet,packet_in)
-    else :
-      self.drop_packet(self,packet,packet_in)
-
-
-      def accept_packet(self,packet,packet_in):
+    def accept_packet(self,packet,packet_in):
         msg = of.ofp_packet_out()
         msg.actions.append(of.ofp_action_output(port = of.OFPP_FLOOD))
         msg.data = packet_in
-        msg.in_port = event.port
+        msg.in_port = packet_in.in_port
         self.connection.send(msg)
       
-      def drop_packet (self,packet,packet_in):
+    def drop_packet (self,packet,packet_in):
         msg = of.ofp_packet_out()
-        msg.buffer_id = event.ofp.buffer_id
-        msg.in_port = event.port
+        msg.buffer_id = packet_in.buffer_id
+        msg.in_port = packet_in.in_port
         self.connection.send(msg)
 
-      def is_workstation(ip):
+    def is_workstation(ip):
         if (ip=='200.20.2.4' or ip=='200.20.2.5' or ip=='200.20.2.6' or ip=='200.20.2.7'):
           return True
         else:
           return False
 
-      def is_ITworkstation(ip):
+    def is_ITworkstation(ip):
         if (ip=='200.20.2.6' or ip=='200.20.2.7'):
           return True
         else:
           return False
       
-      def is_Laptop(ip):
+    def is_Laptop(ip):
         if (ip=='200.20.2.8' or ip=='200.20.2.9'):
           return True
         else:
           return False
       
-      def is_Server2(ip):
+    def is_Server2(ip):
         if (ip=='200.20.2.1'):
           return True
         else:
           return False
       
-      def is_DNSserver(ip):
+    def is_DNSserver(ip):
         if (ip=='200.20.2.3'):
           return True
         else:
           return False
+
+    if packet.find('arp') is not None:
+      accept_packet(self,packet,packet_in)
+    elif packet.find('icmp') is not None:
+      accept_packet(self,packet,packet_in)
+    elif packet.find('tcp') and is_workstation(src_ip) and is_workstation(dest_ip):
+      accept_packet(self,packet,packet_in)
+    elif packet.find('tcp') and is_ITworkstation(src_ip) and is_Laptop(dest_ip):
+      accept_packet(self,packet,packet_in)
+    elif packet.find('tcp') and is_Laptop(src_ip) and is_ITworkstation(dest_ip):
+      accept_packet(self,packet,packet_in)
+    elif packet.find('tcp') and is_Laptop(src_ip) and is_Server2(dest_ip):
+      accept_packet(self,packet,packet_in)
+    elif packet.find('tcp') and is_Server2(src_ip) and is_Laptop(dest_ip):
+      accept_packet(self,packet,packet_in)
+    elif packet.find('udp') and (is_ITworkstation(src_ip) or is_Laptop(src_ip)) and is_DNSserver(dest_ip):
+      accept_packet(self,packet,packet_in)
+    elif packet.find('udp') and (is_ITworkstation(dest_ip) or is_Laptop(dest_ip)) and self.is_DNSserver(src_ip):
+      accept_packet(self,packet,packet_in)
+    else :
+      drop_packet(self,packet,packet_in)
 
   def _handle_PacketIn (self, event):
     """
