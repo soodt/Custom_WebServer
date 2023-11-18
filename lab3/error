@@ -1,0 +1,23 @@
+ERROR:core:Exception while handling Connection!PacketIn...
+Traceback (most recent call last):
+  File "/home/mininet/pox/pox/lib/revent/revent.py", line 231, in raiseEventNoErrors
+    return self.raiseEvent(event, *args, **kw)
+  File "/home/mininet/pox/pox/lib/revent/revent.py", line 278, in raiseEvent
+    rv = event._invoke(handler, *args, **kw)
+  File "/home/mininet/pox/pox/lib/revent/revent.py", line 156, in _invoke
+    return handler(self, *args, **kw)
+  File "/home/mininet/pox/pox/misc/lab3_controller_skel.py", line 155, in _handle_PacketIn
+    self.do_routing(packet, packet_in, event.port, event.dpid)
+  File "/home/mininet/pox/pox/misc/lab3_controller_skel.py", line 128, in do_routing
+    accept_packet(self,packet,packet_in, switch_id, dest_subnet, port_on_switch, dest_ip)
+  File "/home/mininet/pox/pox/misc/lab3_controller_skel.py", line 85, in accept_packet
+    self.connection.send(msg)
+  File "/home/mininet/pox/pox/openflow/of_01.py", line 692, in send
+    data = data.pack()
+  File "/home/mininet/pox/pox/openflow/libopenflow_01.py", line 3590, in pack
+    actions = b''.join((i.pack() for i in self.actions))
+  File "/home/mininet/pox/pox/openflow/libopenflow_01.py", line 3590, in <genexpr>
+    actions = b''.join((i.pack() for i in self.actions))
+  File "/home/mininet/pox/pox/openflow/libopenflow_01.py", line 1560, in pack
+    self.max_len)
+error: cannot convert argument to integer
