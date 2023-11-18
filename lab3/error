@@ -21,3 +21,18 @@ Traceback (most recent call last):
   File "/home/mininet/pox/pox/openflow/libopenflow_01.py", line 1560, in pack
     self.max_len)
 error: cannot convert argument to integer
+ERROR:openflow.of_01:[00-00-00-00-00-04 2] OpenFlow Error:
+[00-00-00-00-00-04 2] Error: header: 
+[00-00-00-00-00-04 2] Error:   version: 1
+[00-00-00-00-00-04 2] Error:   type:    1 (OFPT_ERROR)
+[00-00-00-00-00-04 2] Error:   length:  76
+[00-00-00-00-00-04 2] Error:   xid:     28
+[00-00-00-00-00-04 2] Error: type: OFPET_BAD_REQUEST (1)
+[00-00-00-00-00-04 2] Error: code: OFPBRC_BUFFER_EMPTY (7)
+[00-00-00-00-00-04 2] Error: datalen: 64
+[00-00-00-00-00-04 2] Error: 0000: 01 0e 00 50 00 00 00 1c  00 00 00 00 00 01 00 00   |...P............|
+[00-00-00-00-00-04 2] Error: 0010: 00 00 00 08 00 00 00 00  00 09 ff ff 00 00 08 00   |................|
+[00-00-00-00-00-04 2] Error: 0020: 00 01 00 00 c8 14 02 08  c8 14 02 09 00 08 00 00   |................|
+[00-00-00-00-00-04 2] Error: 0030: 00 00 00 00 00 00 00 00  00 00 00 1e 00 00 80 00   |................|
+ERROR:core:Exception while handling Connection!PacketIn...
+
