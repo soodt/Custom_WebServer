@@ -29,6 +29,7 @@ class Routing (object):
     # Your code here
 
     def findOutPort(packet,switch_id,subnet,port_on_switch,dest_ip):
+      log.info("------------------------------------- switch id = %s",switch_id)
       if(switch_id==1):
         if(port_on_switch == 5):
           if(dest_ip == '200.20.3.4'):
@@ -77,19 +78,23 @@ class Routing (object):
 
     def accept_packet(self,packet,packet_in, switch_id, subnet, port_on_switch,dest_ip):
         
-        out_port = findOutPort(packet, switch_id, subnet, port_on_switch,dest_ip)
-        msg = of.ofp_packet_out()
-        msg.actions.append(of.ofp_action_output(port = out_port))
-        msg.data = packet_in
-        msg.in_port = packet_in.in_port
-        self.connection.send(msg)
-
+        out_port1 = (findOutPort(packet, switch_id, subnet, port_on_switch,dest_ip))
+        log.info("------------------------------------- out port = %s, switch id = %s, subnet = %s, in port= %s, des ip = %s",out_port1, switch_id,subnet,port_on_switch,dest_ip)
+        out_port = int(out_port1)
+        
         msg2 = of.ofp_flow_mod()
         msg2.match = of.ofp_match.from_packet(packet, port_on_switch)
         msg2.idle_timeout = 30
         msg2.actions.append(of.ofp_action_output(port = out_port))
         msg2.data = packet_in
         self.connection.send(msg2)
+
+        msg = of.ofp_packet_out()
+        msg.actions.append(of.ofp_action_output(port = out_port))
+        msg.data = packet_in
+        msg.in_port = packet_in.in_port
+        self.connection.send(msg)
+
       
     def drop_packet (self,packet,packet_in):
         msg = of.ofp_packet_out()
@@ -99,20 +104,18 @@ class Routing (object):
     
     def findSubnet(ip):
         ip_adr = IPAddress(str(ip))
-        sales_subnet = IPNetwork('200.20.2.0')
-        ot_subnet = IPNetwork('200.20.3.0')
-        it_subnet = IPNetwork('200.20.4.0')
-        data_subnet = IPNetwork('200.20.1.0')
+        sales_subnet = IPNetwork("200.20.2.1/24")
+        ot_subnet = IPNetwork("200.20.3.1/24")
+        it_subnet = IPNetwork("200.20.4.1/24")
+        data_subnet = IPNetwork("200.20.1.1/24")
+        log.info("------------------------------------- subnet ipadr = %s",ip_adr)
 
         if ip_adr in sales_subnet:
           return "SALES"
-        
         elif ip_adr in ot_subnet:
           return "OT"
-        
         elif ip_adr in it_subnet:
           return "IT"
-        
         elif ip_adr in data_subnet:
           return "DATACENTER"
         else:
@@ -120,6 +123,8 @@ class Routing (object):
 
     src_subnet = findSubnet(src_ip)
     dest_subnet = findSubnet(dest_ip)
+
+    log.info("HIII-------------------------------------")
     
     if packet.find('icmp'):
       if (src_subnet == 'SALES' and dest_subnet == 'IT') or (src_subnet == 'IT' and dest_subnet == 'SALES'):
