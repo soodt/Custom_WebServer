@@ -74,8 +74,6 @@ class Routing (object):
           return 3
         elif(subnet=="OT"):
           return 5
-      
-
 
     def accept_packet(self,packet,packet_in, switch_id, subnet, port_on_switch,dest_ip):
         
@@ -88,6 +86,7 @@ class Routing (object):
 
         msg2 = of.ofp_flow_mod()
         msg2.match = of.ofp_match.from_packet(packet, port_on_switch)
+        msg2.idle_timeout = 30
         msg2.actions.append(of.ofp_action_output(port = out_port))
         msg2.data = packet_in
         self.connection.send(msg2)
@@ -99,7 +98,7 @@ class Routing (object):
         self.connection.send(msg)
     
     def findSubnet(ip):
-        ip_adr = IPAddress(ip)
+        ip_adr = IPAddress(str(ip))
         sales_subnet = IPNetwork('200.20.2.0')
         ot_subnet = IPNetwork('200.20.3.0')
         it_subnet = IPNetwork('200.20.4.0')
@@ -124,21 +123,21 @@ class Routing (object):
     
     if packet.find('icmp'):
       if (src_subnet == 'SALES' and dest_subnet == 'IT') or (src_subnet == 'IT' and dest_subnet == 'SALES'):
-        accept_packet(self,packet,packet_in, switch_id, dest_subnet, port_on_switch)
+        accept_packet(self,packet,packet_in, switch_id, dest_subnet, port_on_switch, dest_ip)
       elif src_subnet == dest_subnet:
-        accept_packet(self,packet,packet_in, switch_id, dest_subnet, port_on_switch)
+        accept_packet(self,packet,packet_in, switch_id, dest_subnet, port_on_switch, dest_ip)
     elif packet.find('tcp'):
       if (src_subnet == 'DATACENTER' or src_subnet == 'IT' or src_subnet == 'OT') and (dest_subnet == 'DATACENTER' or dest_subnet == 'IT' or dest_subnet == 'OT'):
-        accept_packet(self,packet,packet_in, switch_id, dest_subnet, port_on_switch)
+        accept_packet(self,packet,packet_in, switch_id, dest_subnet, port_on_switch, dest_ip)
       elif src_subnet == dest_subnet:
         accept_packet(self,packet,packet_in, switch_id, dest_subnet, port_on_switch,dest_ip)
     elif packet.find('udp'):
       if (src_subnet == 'OT' and dest_subnet == 'DATACENTER') or (src_subnet == 'DATACENTER' and dest_subnet == 'OT'):
-        accept_packet(self,packet,packet_in, switch_id, dest_subnet, port_on_switch)
+        accept_packet(self,packet,packet_in, switch_id, dest_subnet, port_on_switch, dest_ip)
       elif (src_subnet == 'DATACENTER' and dest_subnet == 'IT') or (src_subnet == 'IT' and dest_subnet == 'DATACENTER'):
-        accept_packet(self,packet,packet_in, switch_id, dest_subnet, port_on_switch)
+        accept_packet(self,packet,packet_in, switch_id, dest_subnet, port_on_switch, dest_ip)
       elif src_subnet == dest_subnet:
-        accept_packet(self,packet,packet_in, switch_id, dest_subnet, port_on_switch)
+        accept_packet(self,packet,packet_in, switch_id, dest_subnet, port_on_switch, dest_ip)
     else:
       drop_packet(self,packet,packet_in)
 
