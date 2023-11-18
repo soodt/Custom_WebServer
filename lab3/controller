@@ -25,14 +25,72 @@ class Routing (object):
     src = packet.find('ipv4')
     src_ip = src.srcip if src else None
     dest = packet.find('ipv4')
-        dest_ip = dest.dstip if dest else None
+    dest_ip = dest.dstip if dest else None
     # Your code here
-    def accept_packet(self,packet,packet_in):
+
+    def findOutPort(packet,switch_id,subnet,port_on_switch,dest_ip):
+      if(switch_id==1):
+        if(port_on_switch == 5):
+          if(dest_ip == '200.20.3.4'):
+            return 1
+          elif (dest_ip == '200.20.3.5'):
+            return 2
+        else:
+          return 5
+      elif(switch_id==2):
+        if(port_on_switch == 2):
+          if(dest_ip == '200.20.4.6'):
+            return 3
+          elif (dest_ip == '200.20.4.7'):
+            return 1
+        else:
+          return 2
+      elif(switch_id==3):
+        if(port_on_switch == 3):
+          if(dest_ip == '200.20.1.1'):
+            return 1
+          elif (dest_ip == '200.20.1.2'):
+            return 2
+          elif (dest_ip == '200.20.1.3'):
+            return 4
+        else:
+          return 3
+      elif(switch_id==4):
+        if(port_on_switch == 4):
+          if(dest_ip == '200.20.2.8'):
+            return 1
+          elif (dest_ip == '200.20.2.10'):
+            return 3
+          elif (dest_ip == '200.20.2.9'):
+            return 2
+        else:
+          return 4
+      else:
+        if(subnet=="SALES"):
+          return 4
+        elif(subnet=="IT"):
+          return 2
+        elif(subnet=="DATACENTER"):
+          return 3
+        elif(subnet=="OT"):
+          return 5
+      
+
+
+    def accept_packet(self,packet,packet_in, switch_id, subnet, port_on_switch,dest_ip):
+        
+        out_port = findOutPort(packet, switch_id, subnet, port_on_switch,dest_ip)
         msg = of.ofp_packet_out()
-        msg.actions.append(of.ofp_action_output(port = of.OFPP_FLOOD))
+        msg.actions.append(of.ofp_action_output(port = out_port))
         msg.data = packet_in
         msg.in_port = packet_in.in_port
         self.connection.send(msg)
+
+        msg2 = of.ofp_flow_mod()
+        msg2.match = of.ofp_match.from_packet(packet, port_on_switch)
+        msg2.actions.append(of.ofp_action_output(port = out_port))
+        msg2.data = packet_in
+        self.connection.send(msg2)
       
     def drop_packet (self,packet,packet_in):
         msg = of.ofp_packet_out()
@@ -66,21 +124,21 @@ class Routing (object):
     
     if packet.find('icmp'):
       if (src_subnet == 'SALES' and dest_subnet == 'IT') or (src_subnet == 'IT' and dest_subnet == 'SALES'):
-        accept_packet(self,packet,packet_in)
+        accept_packet(self,packet,packet_in, switch_id, dest_subnet, port_on_switch)
       elif src_subnet == dest_subnet:
-        accept_packet(self,packet,packet_in)
+        accept_packet(self,packet,packet_in, switch_id, dest_subnet, port_on_switch)
     elif packet.find('tcp'):
       if (src_subnet == 'DATACENTER' or src_subnet == 'IT' or src_subnet == 'OT') and (dest_subnet == 'DATACENTER' or dest_subnet == 'IT' or dest_subnet == 'OT'):
-        accept_packet(self,packet,packet_in)
+        accept_packet(self,packet,packet_in, switch_id, dest_subnet, port_on_switch)
       elif src_subnet == dest_subnet:
-        accept_packet(self,packet,packet_in)
+        accept_packet(self,packet,packet_in, switch_id, dest_subnet, port_on_switch,dest_ip)
     elif packet.find('udp'):
       if (src_subnet == 'OT' and dest_subnet == 'DATACENTER') or (src_subnet == 'DATACENTER' and dest_subnet == 'OT'):
-        accept_packet(self,packet,packet_in)
+        accept_packet(self,packet,packet_in, switch_id, dest_subnet, port_on_switch)
       elif (src_subnet == 'DATACENTER' and dest_subnet == 'IT') or (src_subnet == 'IT' and dest_subnet == 'DATACENTER'):
-        accept_packet(self,packet,packet_in)
+        accept_packet(self,packet,packet_in, switch_id, dest_subnet, port_on_switch)
       elif src_subnet == dest_subnet:
-        accept_packet(self,packet,packet_in)
+        accept_packet(self,packet,packet_in, switch_id, dest_subnet, port_on_switch)
     else:
       drop_packet(self,packet,packet_in)
 
