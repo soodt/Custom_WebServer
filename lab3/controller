@@ -31,7 +31,7 @@ class Routing (object):
     def findOutPort(packet,switch_id,subnet,port_on_switch,dest_ip):
       log.info("------------------------------------- switch id = %s",switch_id)
       if(switch_id==1):
-        if(port_on_switch == 5):
+        if(port_on_switch == 5) or (subnet=="OT"):
           if(dest_ip == '200.20.3.4'):
             return 1
           elif (dest_ip == '200.20.3.5'):
@@ -39,7 +39,7 @@ class Routing (object):
         else:
           return 5
       elif(switch_id==2):
-        if(port_on_switch == 2):
+        if(port_on_switch == 2) or (subnet=="IT"):
           if(dest_ip == '200.20.4.6'):
             return 3
           elif (dest_ip == '200.20.4.7'):
@@ -47,7 +47,7 @@ class Routing (object):
         else:
           return 2
       elif(switch_id==3):
-        if(port_on_switch == 3):
+        if(port_on_switch == 3) or (subnet=="DATACENTER"):
           if(dest_ip == '200.20.1.1'):
             return 1
           elif (dest_ip == '200.20.1.2'):
@@ -57,7 +57,9 @@ class Routing (object):
         else:
           return 3
       elif(switch_id==4):
-        if(port_on_switch == 4):
+        log.info("------------------------------------- BEFORE IF")
+        if(port_on_switch == 4) or (subnet=="SALES"):
+          log.info("-------------------------------------  1ST in port = %s, subnet = %s",port_on_switch, subnet)
           if(dest_ip == '200.20.2.8'):
             return 1
           elif (dest_ip == '200.20.2.10'):
@@ -65,11 +67,13 @@ class Routing (object):
           elif (dest_ip == '200.20.2.9'):
             return 2
         else:
+          log.info("------------------------------------- ELSE in port = %s, subnet = %s",port_on_switch, subnet)
           return 4
       else:
         if(subnet=="SALES"):
           return 4
         elif(subnet=="IT"):
+          log.info("-----------------WHY HERE-------------------- in port = %s, subnet = %s",port_on_switch, subnet)
           return 2
         elif(subnet=="DATACENTER"):
           return 3
@@ -124,27 +128,35 @@ class Routing (object):
     src_subnet = findSubnet(src_ip)
     dest_subnet = findSubnet(dest_ip)
 
-    log.info("HIII-------------------------------------")
+   # log.info("HIII-------------------------------------")
     
     if packet.find('icmp'):
       if (src_subnet == 'SALES' and dest_subnet == 'IT') or (src_subnet == 'IT' and dest_subnet == 'SALES'):
         accept_packet(self,packet,packet_in, switch_id, dest_subnet, port_on_switch, dest_ip)
+        return
       elif src_subnet == dest_subnet:
         accept_packet(self,packet,packet_in, switch_id, dest_subnet, port_on_switch, dest_ip)
+        return
     elif packet.find('tcp'):
       if (src_subnet == 'DATACENTER' or src_subnet == 'IT' or src_subnet == 'OT') and (dest_subnet == 'DATACENTER' or dest_subnet == 'IT' or dest_subnet == 'OT'):
         accept_packet(self,packet,packet_in, switch_id, dest_subnet, port_on_switch, dest_ip)
+        return
       elif src_subnet == dest_subnet:
         accept_packet(self,packet,packet_in, switch_id, dest_subnet, port_on_switch,dest_ip)
+        return
     elif packet.find('udp'):
       if (src_subnet == 'OT' and dest_subnet == 'DATACENTER') or (src_subnet == 'DATACENTER' and dest_subnet == 'OT'):
         accept_packet(self,packet,packet_in, switch_id, dest_subnet, port_on_switch, dest_ip)
+        return
       elif (src_subnet == 'DATACENTER' and dest_subnet == 'IT') or (src_subnet == 'IT' and dest_subnet == 'DATACENTER'):
         accept_packet(self,packet,packet_in, switch_id, dest_subnet, port_on_switch, dest_ip)
+        return
       elif src_subnet == dest_subnet:
         accept_packet(self,packet,packet_in, switch_id, dest_subnet, port_on_switch, dest_ip)
+        return
     else:
       drop_packet(self,packet,packet_in)
+      return
 
 
   def _handle_PacketIn (self, event):
