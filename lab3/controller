@@ -1,0 +1,107 @@
+# Lab3 Skeleton
+
+from pox.core import core
+from netaddr import IPAddress, IPNetwork
+import pox.openflow.libopenflow_01 as of
+
+log = core.getLogger()
+
+class Routing (object):
+  """
+  A Firewall object is created for each switch that connects.
+  A Connection object for that switch is passed to the __init__ function.
+  """
+  def __init__ (self, connection):
+    # Keep track of the connection to the switch so that we can
+    # send it messages!
+    self.connection = connection
+
+    # This binds our PacketIn event listener
+    connection.addListeners(self)
+
+  def do_routing (self, packet, packet_in, port_on_switch, switch_id):
+    # port_on_swtich - the port on which this packet was received
+    # switch_id - the switch which received this packet
+    src = packet.find('ipv4')
+    src_ip = src.srcip if src else None
+    dest = packet.find('ipv4')
+        dest_ip = dest.dstip if dest else None
+    # Your code here
+    def accept_packet(self,packet,packet_in):
+        msg = of.ofp_packet_out()
+        msg.actions.append(of.ofp_action_output(port = of.OFPP_FLOOD))
+        msg.data = packet_in
+        msg.in_port = packet_in.in_port
+        self.connection.send(msg)
+      
+    def drop_packet (self,packet,packet_in):
+        msg = of.ofp_packet_out()
+        msg.buffer_id = packet_in.buffer_id
+        msg.in_port = packet_in.in_port
+        self.connection.send(msg)
+    
+    def findSubnet(ip):
+        ip_adr = IPAddress(ip)
+        sales_subnet = IPNetwork('200.20.2.0')
+        ot_subnet = IPNetwork('200.20.3.0')
+        it_subnet = IPNetwork('200.20.4.0')
+        data_subnet = IPNetwork('200.20.1.0')
+
+        if ip_adr in sales_subnet:
+          return "SALES"
+        
+        elif ip_adr in ot_subnet:
+          return "OT"
+        
+        elif ip_adr in it_subnet:
+          return "IT"
+        
+        elif ip_adr in data_subnet:
+          return "DATACENTER"
+        else:
+          return "OUT OF NETWORK"
+
+    src_subnet = findSubnet(src_ip)
+    dest_subnet = findSubnet(dest_ip)
+    
+    if packet.find('icmp'):
+      if (src_subnet == 'SALES' and dest_subnet == 'IT') or (src_subnet == 'IT' and dest_subnet == 'SALES'):
+        accept_packet(self,packet,packet_in)
+      elif src_subnet == dest_subnet:
+        accept_packet(self,packet,packet_in)
+    elif packet.find('tcp'):
+      if (src_subnet == 'DATACENTER' or src_subnet == 'IT' or src_subnet == 'OT') and (dest_subnet == 'DATACENTER' or dest_subnet == 'IT' or dest_subnet == 'OT'):
+        accept_packet(self,packet,packet_in)
+      elif src_subnet == dest_subnet:
+        accept_packet(self,packet,packet_in)
+    elif packet.find('udp'):
+      if (src_subnet == 'OT' and dest_subnet == 'DATACENTER') or (src_subnet == 'DATACENTER' and dest_subnet == 'OT'):
+        accept_packet(self,packet,packet_in)
+      elif (src_subnet == 'DATACENTER' and dest_subnet == 'IT') or (src_subnet == 'IT' and dest_subnet == 'DATACENTER'):
+        accept_packet(self,packet,packet_in)
+      elif src_subnet == dest_subnet:
+        accept_packet(self,packet,packet_in)
+    else:
+      drop_packet(self,packet,packet_in)
+
+
+  def _handle_PacketIn (self, event):
+    """
+    Handles packet in messages from the switch.
+    """
+    packet = event.parsed # This is the parsed packet data.
+    if not packet.parsed:
+      log.warning("Ignoring incomplete packet")
+      return
+
+    packet_in = event.ofp # The actual ofp_packet_in message.
+    self.do_routing(packet, packet_in, event.port, event.dpid)
+
+def launch ():
+  """
+  Starts the component
+  """
+  def start_switch (event):
+    log.debug("Controlling %s" % (event.connection,))
+    Routing(event.connection)
+  core.openflow.addListenerByName("ConnectionUp", start_switch)
