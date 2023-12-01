@@ -43,6 +43,7 @@ def getType(extension):
     
 def http_response(path):
 
+    content_length = 0
     if os.path.exists(path):
         with open(path, 'rb') as file:
             file_content = file.read()
@@ -72,7 +73,7 @@ def http_response(path):
             f"\r\n"
             f"404 Not Found: File not found\r\n"
         )
-    return http_message
+    return http_message, content_length
 
 
 
@@ -125,9 +126,12 @@ if port_num == 8000:
             sys.stdout.write(f"Connection to {addr[0]}, {addr[1]} is now closed.")
         else:
             path = os.path.join(dir_path, sentence_split[1].lstrip("/"))
-            response = http_response(dir_path)
+            response, length = http_response(dir_path)
             connectionSocket.send(response)
             connectionSocket.close()
+            log_csv(socket_ip, socket_port, addr[0], addr[1], sentence_split[1], response.split(b"\r\n")[0].decode(),
+                        length)
+            log_text(response)
             sys.stdout.write(f"Connection to {addr[0]}, {addr[1]} is now closed.")
             
 elif port_num in range(0,1024):
