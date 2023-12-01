@@ -87,7 +87,7 @@ port_num = args.p
 dir_path = args.d
 
 port_num = 8000
-dir_path = "/Users/tanujsood/Desktop"
+#dir_path = "/Users/tanujsood/Desktop"
 
 if port_num == 8000:
     #sys.stdout.write(f"{port_num} {dir_path}\n")
