@@ -73,7 +73,7 @@ def http_response(path):
             "\r\n"
             "404 Not Found: File not found\r\n"
         ).format(datetime.utcnow().strftime('%a, %d %b %Y %H:%M:%S GMT'))
-    return http_message, content_length
+    return http_message.encode(), content_length
 
 
 
@@ -87,7 +87,7 @@ port_num = args.p
 dir_path = args.d
 
 port_num = 8000
-# dir_path = "/Users/tanujsood/Desktop"
+dir_path = "/Users/tanujsood/Desktop"
 
 if port_num == 8000:
     #sys.stdout.write(f"{port_num} {dir_path}\n")
@@ -112,7 +112,7 @@ if port_num == 8000:
             "501 Not Implemented: The server does not support this functionality r\n"
             ).format(datetime.utcnow().strftime('%a, %d %b %Y %H:%M:%S GMT'))
             connectionSocket.close()
-            sys.stdout.write("Connection to {}, {} is now closed.".format(addr[0],addr[1]))
+            sys.stdout.write("Connection to {}, {} is now closed.\n".format(addr[0],addr[1]))
         elif sentence_split[2] != "HTTP/1.1":
             error_response = (
             "HTTP/1.1 505 HTTP Version Not Supported\r\n"
@@ -122,13 +122,13 @@ if port_num == 8000:
             "505 HTTP Version Not Supported: The server only supports HTTP/1.1\r\n"
             ).format(datetime.utcnow().strftime('%a, %d %b %Y %H:%M:%S GMT'))
             connectionSocket.close()
-            sys.stdout.write("Connection to {}, {} is now closed.".format(addr[0]),addr[1])
+            sys.stdout.write("Connection to {}, {} is now closed.\n".format(addr[0]),addr[1])
         else:
             path = os.path.join(dir_path, sentence_split[1].lstrip("/"))
             response, length = http_response(path)
             connectionSocket.send(response)
             connectionSocket.close()
-            sys.stdout.write("Connection to {}, {} is now closed.".format(addr[0],addr[1]))
+            sys.stdout.write("Connection to {}, {} is now closed.\n".format(addr[0],addr[1]))
             log_csv(socket_ip, socket_port, addr[0], addr[1], sentence_split[1], response.split(b"\r\n")[0].decode(),
                         length)
             log_text(response)
