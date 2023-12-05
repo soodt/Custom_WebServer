@@ -61,7 +61,8 @@ def http_response(path):
         "Connection: close\r\n"
         "\r\n"
         ).format(content_length,type,datetime.utcnow().strftime('%a, %d %b %Y %H:%M:%S GMT'),last_modified)
-        http_message = headers.encode() + file_content + b"\r\n"
+        sys.stdout.write("{}\n".format(headers))
+        http_message = headers.encode() + file_content 
         #sys.stdout.write(http_message)
        
     else:
@@ -70,6 +71,7 @@ def http_response(path):
             "Date: {}\r\n"
             "\r\n"
         ).format(datetime.utcnow().strftime('%a, %d %b %Y %H:%M:%S GMT'))
+        sys.stdout.write("{}\n".format(headers))
         http_message = headers.encode()
     return http_message, content_length, headers
 
@@ -116,10 +118,9 @@ if port_num == 80:
         if len(sentence_split)<2 or sentence_split[0] != "GET":
             #sys.stdout.write("here2: {}, {}\n".format(socket_ip,socket_port))
             error_response = (
-            "HTTP/1.1 501 Not Implemented\r\n"
-            "Date: {}\r\n"
-            "\r\n"
+            "HTTP/1.1 501 Not Implemented\r\n Date: {}\r\n \r\n"
             ).format(datetime.utcnow().strftime('%a, %d %b %Y %H:%M:%S GMT'))
+            #sys.stdout.write("{}\n".format(error_response))
             error_response = error_response.encode()
             connectionSocket.send(error_response)
             connectionSocket.close()
