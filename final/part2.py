@@ -67,9 +67,7 @@ def http_response(path):
         headers = (
             "HTTP/1.1 404 Not Found\r\n"
             "Date: {}\r\n"
-            "Connection: close\r\n"
             "\r\n"
-            "404 Not Found: File not found\r\n"
         ).format(datetime.utcnow().strftime('%a, %d %b %Y %H:%M:%S GMT'))
         http_message = headers.encode()
     return http_message, content_length, headers
@@ -106,12 +104,12 @@ if port_num == 80:
         if len(sentence_split)<2 or sentence_split[0] != "GET":
             #sys.stdout.write("here2: {}, {}\n".format(socket_ip,socket_port))
             error_response = (
-            "HTTP/1.1 501 Not Implemented\r\n\r\n"
+            "HTTP/1.1 501 Not Implemented\r\n"
             "Date: {}\r\n"
-            "Connection: close\r\n"
             "\r\n"
-            "501 Not Implemented: The server does not support this functionality r\n"
             ).format(datetime.utcnow().strftime('%a, %d %b %Y %H:%M:%S GMT'))
+            error_response = error_response.encode()
+            connectionSocket.send(error_response)
             connectionSocket.close()
             sys.stdout.write("Connection to {}, {} is now closed.\n".format(addr[0],addr[1]))
         elif len(sentence_split)<3 or sentence_split[2] != "HTTP/1.1":
@@ -119,10 +117,10 @@ if port_num == 80:
             error_response = (
             "HTTP/1.1 505 HTTP Version Not Supported\r\n"
             "Date: {}\r\n"
-            "Connection: close\r\n"
             "\r\n"
-            "505 HTTP Version Not Supported: The server only supports HTTP/1.1\r\n"
             ).format(datetime.utcnow().strftime('%a, %d %b %Y %H:%M:%S GMT'))
+            error_response = error_response.encode()
+            connectionSocket.send(error_response)
             connectionSocket.close()
             sys.stdout.write("Connection to {}, {} is now closed.\n".format(addr[0]),addr[1])
         else:
