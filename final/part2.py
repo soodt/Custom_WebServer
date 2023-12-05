@@ -16,7 +16,7 @@ def log_text(response):
     status_line = response.split(b"\r\n")[0].decode()
     headers = response.decode().split("\r\n\r\n")[0]
     with open('tasoodHTTPResponses.txt', 'a') as file:
-        file.write("{}\n{}\n".format(status_line,headers))
+        file.write("{}\n".format(headers))
 
 
 def getType(extension):
@@ -73,7 +73,10 @@ def http_response(path):
             "\r\n"
             "404 Not Found: File not found\r\n"
         ).format(datetime.utcnow().strftime('%a, %d %b %Y %H:%M:%S GMT'))
-    return http_message.encode(), content_length
+        http_message = http_message.encode(
+
+        )
+    return http_message, content_length
 
 
 
@@ -86,10 +89,10 @@ args = parser.parse_args()
 port_num = args.p
 dir_path = args.d
 
-port_num = 8000
+#port_num = 8000
 #dir_path = "/Users/tanujsood/Desktop"
 
-if port_num == 8000:
+if port_num == 80:
     #sys.stdout.write(f"{port_num} {dir_path}\n")
     serverSocket = socket(AF_INET, SOCK_STREAM)
     serverSocket.bind(("127.0.0.1", port_num))
@@ -99,11 +102,13 @@ if port_num == 8000:
     socket_port = socket_info[1]
     sys.stdout.write("Welcome socket created: {}, {}\n".format(socket_ip,socket_port))
     while True:
+        #sys.stdout.write("here1: {}, {}\n".format(socket_ip,socket_port))
         connectionSocket, addr = serverSocket.accept()
         sys.stdout.write("Connection socket created: {}, {}\n".format(addr[0],addr[1]))
         sentence = connectionSocket.recv(1024).decode()
         sentence_split = sentence.split()
         if sentence_split[0] != "GET":
+            #sys.stdout.write("here2: {}, {}\n".format(socket_ip,socket_port))
             error_response = (
             "HTTP/1.1 501 Not Implemented\r\n\r\n"
             "Date: {}\r\n"
@@ -114,6 +119,7 @@ if port_num == 8000:
             connectionSocket.close()
             sys.stdout.write("Connection to {}, {} is now closed.\n".format(addr[0],addr[1]))
         elif sentence_split[2] != "HTTP/1.1":
+            #sys.stdout.write("here3: {}, {}\n".format(socket_ip,socket_port))
             error_response = (
             "HTTP/1.1 505 HTTP Version Not Supported\r\n"
             "Date: {}\r\n"
@@ -124,6 +130,7 @@ if port_num == 8000:
             connectionSocket.close()
             sys.stdout.write("Connection to {}, {} is now closed.\n".format(addr[0]),addr[1])
         else:
+            #sys.stdout.write("here4: {}, {}\n".format(socket_ip,socket_port))
             path = os.path.join(dir_path, sentence_split[1].lstrip("/"))
             response, length = http_response(path)
             connectionSocket.send(response)
