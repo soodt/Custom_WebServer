@@ -97,10 +97,10 @@ if port_num == 80:
             bind_success = True
         except OSError as e:
             if e.errno == errno.EADDRINUSE:
-                print(f"Port {port_num} is already in use. Retrying in 5 seconds...")
+                sys.stdout.write("Port num is already in use. Retrying in 5 seconds...\n")
                 time.sleep(5)
             else:
-                print(f"Fatal error: {e}")
+                sys.stdout.write("Fatal error: {}\n".format(e))
                 sys.exit(1)
     serverSocket.listen(1)
     socket_info = serverSocket.getsockname()
