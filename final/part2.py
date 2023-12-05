@@ -114,13 +114,14 @@ if port_num == 80:
         connectionSocket, addr = serverSocket.accept()
         sys.stdout.write("Connection socket created: {}, {}\n".format(addr[0],addr[1]))
         sentence = connectionSocket.recv(1024).decode()
+        sys.stdout.write("{}\n".format(sentence))
         sentence_split = sentence.split()
         if len(sentence_split)<2 or sentence_split[0] != "GET":
             #sys.stdout.write("here2: {}, {}\n".format(socket_ip,socket_port))
             error_response = (
             "HTTP/1.1 501 Not Implemented\r\n Date: {}\r\n \r\n"
             ).format(datetime.utcnow().strftime('%a, %d %b %Y %H:%M:%S GMT'))
-            #sys.stdout.write("{}\n".format(error_response))
+            sys.stdout.write("{}\n".format(error_response))
             error_response = error_response.encode()
             connectionSocket.send(error_response)
             connectionSocket.close()
