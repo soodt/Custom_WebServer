@@ -10,11 +10,9 @@ def log_csv(server_ip, server_port, client_ip, client_port, url, status_line, co
     with open('tasoodSocketOutput.csv', mode='a') as csv_file:
         csv_writer = csv.writer(csv_file)
         csv_writer.writerow(["Client request served", "4-Tuple:", server_ip, server_port, client_ip, client_port,
-                             "Requested URL", url, status_line, "Bytes sent:", content_length])
+                             "Requested URL", "."+url, status_line, "Bytes sent:", content_length])
 
-def log_text(response):
-    status_line = response.split(b"\r\n")[0].decode()
-    headers = response.decode().split("\r\n\r\n")[0]
+def log_text(headers):
     with open('tasoodHTTPResponses.txt', 'a') as file:
         file.write("{}\n".format(headers))
 
@@ -47,13 +45,13 @@ def http_response(path):
     if os.path.exists(path):
         with open(path, 'rb') as file:
             file_content = file.read()
-        file.close
+        file.close()
         content_length = os.path.getsize(path)
         last_modified = os.path.getmtime(path)
         last_modified = time.ctime(last_modified)
         extension = os.path.splitext(path)[1].lower()
         type = getType(extension)
-        http_message = (
+        headers = (
         "HTTP/1.1 200 OK\r\n"
         "Content-Length: {}\r\n" 
         "Content-Type: {}\r\n"
@@ -62,21 +60,19 @@ def http_response(path):
         "Connection: close\r\n"
         "\r\n"
         ).format(content_length,type,datetime.utcnow().strftime('%a, %d %b %Y %H:%M:%S GMT'),last_modified)
-        http_message = http_message.encode() + file_content + b"\r\n"
+        http_message = headers.encode() + file_content + b"\r\n"
         #sys.stdout.write(http_message)
        
     else:
-        http_message = (
+        headers = (
             "HTTP/1.1 404 Not Found\r\n"
             "Date: {}\r\n"
             "Connection: close\r\n"
             "\r\n"
             "404 Not Found: File not found\r\n"
         ).format(datetime.utcnow().strftime('%a, %d %b %Y %H:%M:%S GMT'))
-        http_message = http_message.encode(
-
-        )
-    return http_message, content_length
+        http_message = headers.encode()
+    return http_message, content_length, headers
 
 
 
@@ -107,7 +103,7 @@ if port_num == 80:
         sys.stdout.write("Connection socket created: {}, {}\n".format(addr[0],addr[1]))
         sentence = connectionSocket.recv(1024).decode()
         sentence_split = sentence.split()
-        if sentence_split[0] != "GET":
+        if len(sentence_split)<2 or sentence_split[0] != "GET":
             #sys.stdout.write("here2: {}, {}\n".format(socket_ip,socket_port))
             error_response = (
             "HTTP/1.1 501 Not Implemented\r\n\r\n"
@@ -118,7 +114,7 @@ if port_num == 80:
             ).format(datetime.utcnow().strftime('%a, %d %b %Y %H:%M:%S GMT'))
             connectionSocket.close()
             sys.stdout.write("Connection to {}, {} is now closed.\n".format(addr[0],addr[1]))
-        elif sentence_split[2] != "HTTP/1.1":
+        elif len(sentence_split)<3 or sentence_split[2] != "HTTP/1.1":
             #sys.stdout.write("here3: {}, {}\n".format(socket_ip,socket_port))
             error_response = (
             "HTTP/1.1 505 HTTP Version Not Supported\r\n"
@@ -132,13 +128,12 @@ if port_num == 80:
         else:
             #sys.stdout.write("here4: {}, {}\n".format(socket_ip,socket_port))
             path = os.path.join(dir_path, sentence_split[1].lstrip("/"))
-            response, length = http_response(path)
+            response, length, heads = http_response(path)
             connectionSocket.send(response)
             connectionSocket.close()
             sys.stdout.write("Connection to {}, {} is now closed.\n".format(addr[0],addr[1]))
-            log_csv(socket_ip, socket_port, addr[0], addr[1], sentence_split[1], response.split(b"\r\n")[0].decode(),
-                        length)
-            log_text(response)
+            log_csv(socket_ip, socket_port, addr[0], addr[1], sentence_split[1], heads.split("\r\n")[0],length)
+            log_text(heads)
             
 elif port_num in range(0,1024):
     sys.stdout.write("Well-known port number {} entered - could cause a conflict.\n".format(port_num))
