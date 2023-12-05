@@ -5,6 +5,7 @@ import time
 from datetime import datetime
 from socket import *
 import csv
+import errno
 
 def log_csv(server_ip, server_port, client_ip, client_port, url, status_line, content_length):
     with open('tasoodSocketOutput.csv', mode='a') as csv_file:
@@ -88,8 +89,19 @@ dir_path = args.d
 
 if port_num == 80:
     #sys.stdout.write(f"{port_num} {dir_path}\n")
-    serverSocket = socket(AF_INET, SOCK_STREAM)
-    serverSocket.bind(("127.0.0.1", port_num))
+    bind_success = False
+    while not bind_success:
+        try:
+            serverSocket = socket(AF_INET, SOCK_STREAM)
+            serverSocket.bind(("127.0.0.1", port_num))
+            bind_success = True
+        except OSError as e:
+            if e.errno == errno.EADDRINUSE:
+                print(f"Port {port_num} is already in use. Retrying in 5 seconds...")
+                time.sleep(5)
+            else:
+                print(f"Fatal error: {e}")
+                sys.exit(1)
     serverSocket.listen(1)
     socket_info = serverSocket.getsockname()
     socket_ip = socket_info[0]
